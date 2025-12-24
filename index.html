@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flowr Timer</title>
+    <meta name="description" content="A lightweight timer with optional voice auto-stop." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app" role="main">
+      <header class="header">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">⏱</div>
+          <div>
+            <div class="title">Flowr</div>
+            <div class="subtitle">Start / Stop / Reset (+ optional voice auto-stop)</div>
+          </div>
+        </div>
+      </header>
+
+      <section class="card" aria-label="Timer">
+        <div class="timerTopRow">
+          <div class="status">
+            <span class="pill" id="statusPill">Idle</span>
+            <span class="statusMeta" id="statusMeta"></span>
+          </div>
+          <div class="liveRegion" aria-live="polite" aria-atomic="true" id="ariaStatus"></div>
+        </div>
+
+        <div class="elapsed" id="elapsed" aria-label="Elapsed time">00:00.000</div>
+
+        <div class="grid2">
+          <div class="kv">
+            <div class="k">Start</div>
+            <div class="v mono" id="startedAt">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">End</div>
+            <div class="v mono" id="endedAt">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">Duration</div>
+            <div class="v mono" id="duration">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">Stop reason</div>
+            <div class="v mono" id="stopReason">—</div>
+          </div>
+        </div>
+
+        <div class="controls" aria-label="Controls">
+          <button class="btn primary" id="startBtn" type="button">Start</button>
+          <button class="btn danger" id="stopBtn" type="button" disabled>Stop</button>
+          <button class="btn" id="resetBtn" type="button">Reset</button>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Voice auto-stop">
+        <div class="sectionTitleRow">
+          <h2 class="sectionTitle">Voice auto-stop (optional)</h2>
+          <div class="badge" id="voiceSupportBadge">Checking…</div>
+        </div>
+
+        <div class="voiceGrid">
+          <label class="switchRow">
+            <input id="voiceEnabled" type="checkbox" />
+            <span class="switchText">Enable voice auto-stop</span>
+          </label>
+
+          <fieldset class="fieldset" id="voiceModeFieldset">
+            <legend class="legend">Stop mode</legend>
+            <label class="radioRow">
+              <input type="radio" name="voiceMode" value="any" checked />
+              <span>Any word</span>
+            </label>
+            <label class="radioRow">
+              <input type="radio" name="voiceMode" value="keyword" />
+              <span>Keyword</span>
+            </label>
+          </fieldset>
+
+          <label class="inputRow">
+            <span class="label">Keyword</span>
+            <input
+              class="input"
+              id="keywordInput"
+              type="text"
+              placeholder="e.g. stop"
+              autocomplete="off"
+              spellcheck="false"
+              disabled
+            />
+          </label>
+        </div>
+
+        <div class="voiceMeta">
+          <div class="hint" id="voiceHint">
+            When enabled, Flowr will stop the running timer when speech is recognized.
+          </div>
+          <div class="hint mono" id="voiceRuntimeState"></div>
+        </div>
+
+        <div class="controls">
+          <button class="btn" id="simulateBtn" type="button">Simulate word heard</button>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Recent sessions">
+        <div class="sectionTitleRow">
+          <h2 class="sectionTitle">Recent sessions</h2>
+          <div class="badge">Last 10</div>
+        </div>
+
+        <div class="tableWrap" role="region" aria-label="Session history" tabindex="0">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Start</th>
+                <th scope="col">End</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Stop reason</th>
+              </tr>
+            </thead>
+            <tbody id="historyTbody">
+              <tr>
+                <td class="muted" colspan="4">No sessions yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="muted small">
+          Voice recognition uses your browser’s speech API. Flowr does not store raw audio.
+        </div>
+      </footer>
+    </main>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
