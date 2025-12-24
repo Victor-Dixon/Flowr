@@ -16,6 +16,12 @@ python3 -m http.server 8000
 
 Then open `http://localhost:8000`.
 
+## Mockups
+
+### Cartoon clock mockup
+- Run the server (above), then open `http://localhost:8000/flowr-mockup/`.
+- Optional: start in Focus mode with `http://localhost:8000/flowr-mockup/?focus=1`.
+
 ## Features
 - **Start / Stop / Reset**
 - **Status**: Idle / Running / Stopped (+ stop reason)
