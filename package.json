@@ -1,0 +1,19 @@
+{
+  "name": "flowr-timer",
+  "version": "1.0.0",
+  "description": "Flowr Timer with Discord bot integration",
+  "main": "discord-bot.js",
+  "type": "module",
+  "scripts": {
+    "start": "node discord-bot.js",
+    "dev": "node --watch discord-bot.js"
+  },
+  "keywords": ["timer", "discord", "bot"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1"
+  }
+}
+
