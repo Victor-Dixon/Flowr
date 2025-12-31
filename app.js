@@ -202,6 +202,43 @@ function escapeHtml(s) {
     .replaceAll("'", "&#039;");
 }
 
+/**
+ * @param {{ status: "running" | "finished"; autoFinishTs?: number | null; finishTs?: number | null }} state
+ * @param {number} now
+ */
+function finishIfDue(state, now) {
+  if (!state || state.status !== "running") return state;
+  const autoFinishTs = state.autoFinishTs;
+  if (!autoFinishTs) return state;
+  if (now < autoFinishTs) return state;
+
+  // Record the scheduled finish time, not the time we noticed it.
+  // This keeps the session deterministic across reloads / background tabs.
+  const finished = { ...state, finishTs: autoFinishTs };
+  finished.status = "finished";
+  return finished;
+}
+
+// Optional: tiny regression guard (runs only in local dev)
+// Set window.__FLOWR_DEV_TESTS__ = true in console to run.
+function __flowr_run_dev_tests__() {
+  try {
+    const start = 1000;
+    const due = 2000;
+    const s = { status: "running", startTs: start, autoFinishTs: due, finishTs: null };
+    const out = finishIfDue(s, 999999);
+    if (out.finishTs !== due) {
+      throw new Error("finishIfDue should set finishTs=autoFinishTs");
+    }
+    console.log("✅ Flowr dev tests: PASS");
+  } catch (e) {
+    console.error("❌ Flowr dev tests: FAIL", e);
+  }
+}
+if (typeof window !== "undefined" && window.__FLOWR_DEV_TESTS__ === true) {
+  __flowr_run_dev_tests__();
+}
+
 function pushSessionToHistory(session) {
   const existing = loadHistory();
   const next = [session, ...existing].slice(0, HISTORY_LIMIT);
@@ -479,4 +516,3 @@ function init() {
 }
 
 init();
-
