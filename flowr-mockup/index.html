@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flowr Mockup — Cartoon Clock</title>
+    <meta
+      name="description"
+      content="Cartoon-style session clock with progress + smoke effects."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="stage" role="main">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brandMark" aria-hidden="true">⏳</span>
+          <span class="brandName">Flowr mockup</span>
+        </div>
+
+        <div class="controls">
+          <label class="field">
+            <span class="fieldLabel">Duration</span>
+            <input
+              id="durationMin"
+              class="fieldInput"
+              type="number"
+              min="1"
+              max="180"
+              value="25"
+            />
+            <span class="fieldSuffix">min</span>
+          </label>
+
+          <button id="startBtn" class="btn primary" type="button">Start</button>
+          <button id="stopBtn" class="btn danger" type="button" disabled>Stop</button>
+          <button id="resetBtn" class="btn" type="button">Reset</button>
+
+          <label class="toggle">
+            <input id="focusToggle" type="checkbox" />
+            <span class="toggleText">Focus mode</span>
+          </label>
+        </div>
+      </header>
+
+      <!-- Side-screen smoke (only visible while running) -->
+      <div class="sideSmoke" aria-hidden="true">
+        <div class="smokeEdge left">
+          <span class="puff p1"></span>
+          <span class="puff p2"></span>
+          <span class="puff p3"></span>
+        </div>
+        <div class="smokeEdge right">
+          <span class="puff p1"></span>
+          <span class="puff p2"></span>
+          <span class="puff p3"></span>
+        </div>
+      </div>
+
+      <section class="clockWrap" aria-label="Session clock">
+        <div class="clockFrame" id="clockFrame">
+          <!-- “Smoke trail” near the clock (strength controlled via --smokeStrength) -->
+          <div class="clockSmokeTrail" aria-hidden="true"></div>
+
+          <svg
+            class="clockSvg"
+            viewBox="0 0 400 400"
+            width="400"
+            height="400"
+            role="img"
+            aria-label="Cartoon clock"
+          >
+            <defs>
+              <radialGradient id="faceGlow" cx="50%" cy="40%" r="70%">
+                <stop offset="0%" stop-color="#fff6a6" stop-opacity="1" />
+                <stop offset="65%" stop-color="#ffe26a" stop-opacity="1" />
+                <stop offset="100%" stop-color="#ffcf3a" stop-opacity="1" />
+              </radialGradient>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#77e4c8" />
+                <stop offset="100%" stop-color="#a78bfa" />
+              </linearGradient>
+              <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="10" stdDeviation="10" flood-opacity="0.35" />
+              </filter>
+            </defs>
+
+            <!-- Progress ring (subtle, behind the clock) -->
+            <g class="progressRing" filter="url(#softShadow)">
+              <circle class="ringTrack" cx="200" cy="200" r="164" />
+              <circle class="ringFill" cx="200" cy="200" r="164" />
+            </g>
+
+            <!-- Clock body -->
+            <g class="clockBody" filter="url(#softShadow)">
+              <!-- Outer case -->
+              <circle class="caseOuter" cx="200" cy="200" r="150" />
+              <circle class="caseInner" cx="200" cy="200" r="136" />
+              <circle class="face" cx="200" cy="200" r="124" />
+
+              <!-- Simple tick marks -->
+              <g class="ticks" aria-hidden="true">
+                <line x1="200" y1="82" x2="200" y2="96" />
+                <line x1="200" y1="304" x2="200" y2="318" />
+                <line x1="82" y1="200" x2="96" y2="200" />
+                <line x1="304" y1="200" x2="318" y2="200" />
+              </g>
+
+              <!-- Eyes -->
+              <g class="eyes" aria-hidden="true">
+                <ellipse class="eye" cx="155" cy="168" rx="26" ry="30" />
+                <ellipse class="eye" cx="245" cy="168" rx="26" ry="30" />
+                <circle class="pupil" id="pupilL" cx="163" cy="175" r="8" />
+                <circle class="pupil" id="pupilR" cx="253" cy="175" r="8" />
+                <path
+                  class="brow"
+                  d="M130 142 C150 128, 170 128, 190 142"
+                  fill="none"
+                />
+                <path
+                  class="brow"
+                  d="M210 142 C230 128, 250 128, 270 142"
+                  fill="none"
+                />
+              </g>
+
+              <!-- Mouth (a little goofy) -->
+              <g class="mouth" aria-hidden="true">
+                <path
+                  id="mouthPath"
+                  d="M150 245 C175 270, 225 270, 250 245"
+                  fill="none"
+                />
+                <path
+                  class="tooth"
+                  d="M182 255 L218 255 L214 270 L186 270 Z"
+                />
+              </g>
+
+              <!-- Hand that rotates by session progress -->
+              <g class="handGroup" id="handGroup">
+                <line class="hand" x1="200" y1="210" x2="200" y2="110" />
+                <circle class="handCap" cx="200" cy="200" r="12" />
+              </g>
+            </g>
+          </svg>
+
+          <div class="centerText" aria-live="polite" aria-atomic="true">
+            <div class="elapsed" id="elapsed">00:00</div>
+            <div class="ends" id="endsLine">Ends in — · —</div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        Tip: add <span class="mono">?focus=1</span> to the URL to start in Focus mode.
+      </footer>
+    </main>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>

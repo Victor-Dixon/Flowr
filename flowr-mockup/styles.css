@@ -1,0 +1,496 @@
+:root {
+  color-scheme: dark;
+  --bg0: #070a14;
+  --bg1: #0b1020;
+  --text: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.68);
+  --line: rgba(255, 255, 255, 0.12);
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+
+  --ink: #1b1422;
+  --case: #ff6aa7;
+  --case2: #ff3f8d;
+  --face: #ffd24a;
+  --faceHi: #fff2b8;
+  --ring: #77e4c8;
+  --ring2: #a78bfa;
+
+  /* JS updates these */
+  --progress: 0; /* 0..1 */
+  --smokeStrength: 0; /* 0..1 */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--text);
+  background:
+    radial-gradient(900px 500px at 10% 10%, rgba(167, 139, 250, 0.20), transparent 60%),
+    radial-gradient(900px 600px at 90% 10%, rgba(119, 228, 200, 0.16), transparent 55%),
+    radial-gradient(1000px 800px at 50% 110%, rgba(255, 90, 90, 0.12), transparent 60%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+  overflow-x: hidden;
+}
+
+.stage {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 16px;
+  padding: 18px 16px 20px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+
+.brandMark {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.brandName {
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.fieldLabel {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 650;
+}
+
+.fieldInput {
+  width: 70px;
+  min-height: 36px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--text);
+  font-weight: 750;
+  font-family: var(--mono);
+}
+
+.fieldSuffix {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.btn {
+  min-height: 42px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  font-weight: 750;
+  cursor: pointer;
+  transition: transform 80ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.085);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn.primary {
+  border-color: rgba(119, 228, 200, 0.45);
+  background: rgba(119, 228, 200, 0.15);
+}
+
+.btn.danger {
+  border-color: rgba(255, 107, 107, 0.55);
+  background: rgba(255, 107, 107, 0.14);
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  user-select: none;
+}
+
+.toggleText {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 650;
+}
+
+.clockWrap {
+  display: grid;
+  place-items: center;
+  padding: 6px 0 0;
+}
+
+.clockFrame {
+  position: relative;
+  width: min(520px, 92vw);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+}
+
+/* Focus mode makes the clock bigger */
+body.focus .clockFrame {
+  width: min(660px, 96vw);
+}
+
+.clockSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.centerText {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  pointer-events: none;
+  transform: translateY(8px);
+}
+
+.elapsed {
+  font-family: var(--mono);
+  font-weight: 900;
+  letter-spacing: -0.6px;
+  font-size: clamp(34px, 4.8vw, 56px);
+  text-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+.ends {
+  margin-top: 6px;
+  font-size: clamp(12px, 2.1vw, 14px);
+  color: var(--muted);
+  font-weight: 650;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+.footer {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  text-align: center;
+  padding: 2px 0 6px;
+}
+
+/* --- Cartoon clock styling (SVG classes) --- */
+.progressRing .ringTrack {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.10);
+  stroke-width: 18;
+}
+
+.progressRing .ringFill {
+  fill: none;
+  stroke: url(#ringGrad);
+  stroke-width: 18;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 200px 200px;
+  stroke-dasharray: 1031.0; /* 2πr for r=164 */
+  stroke-dashoffset: calc(1031.0 * (1 - var(--progress)));
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.25));
+}
+
+/* “Ink” is thick & imperfect to feel cartoon */
+.clockBody .caseOuter {
+  fill: var(--case2);
+  stroke: var(--ink);
+  stroke-width: 12;
+}
+
+.clockBody .caseInner {
+  fill: var(--case);
+  stroke: var(--ink);
+  stroke-width: 10;
+}
+
+.clockBody .face {
+  fill: url(#faceGlow);
+  stroke: var(--ink);
+  stroke-width: 10;
+}
+
+.ticks line {
+  stroke: rgba(0, 0, 0, 0.55);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.eyes .eye {
+  fill: #ffffff;
+  stroke: var(--ink);
+  stroke-width: 8;
+}
+
+.eyes .pupil {
+  fill: var(--ink);
+}
+
+.eyes .brow {
+  stroke: rgba(0, 0, 0, 0.65);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.mouth #mouthPath {
+  stroke: rgba(0, 0, 0, 0.72);
+  stroke-width: 10;
+  stroke-linecap: round;
+}
+
+.mouth .tooth {
+  fill: #fff7d1;
+  stroke: rgba(0, 0, 0, 0.65);
+  stroke-width: 6;
+  stroke-linejoin: round;
+}
+
+.handGroup .hand {
+  stroke: var(--ink);
+  stroke-width: 16;
+  stroke-linecap: round;
+}
+
+.handGroup .handCap {
+  fill: #fff;
+  stroke: var(--ink);
+  stroke-width: 10;
+}
+
+/* --- Wobble: only while running --- */
+body.running .clockFrame {
+  animation: wobble 900ms ease-in-out infinite;
+}
+
+@keyframes wobble {
+  0% {
+    transform: rotate(-0.6deg) scale(1.004, 0.996);
+  }
+  50% {
+    transform: rotate(0.8deg) scale(0.996, 1.006);
+  }
+  100% {
+    transform: rotate(-0.6deg) scale(1.004, 0.996);
+  }
+}
+
+/* --- Side-screen smoke puffs --- */
+.sideSmoke {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+body.running .sideSmoke {
+  opacity: 1;
+}
+
+.smokeEdge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: min(220px, 26vw);
+  overflow: hidden;
+}
+
+.smokeEdge.left {
+  left: 0;
+}
+
+.smokeEdge.right {
+  right: 0;
+  transform: scaleX(-1);
+}
+
+.puff {
+  position: absolute;
+  left: -50px;
+  width: 140px;
+  height: 140px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.00) 65%),
+    radial-gradient(circle at 65% 55%, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.00) 60%),
+    radial-gradient(circle at 55% 25%, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.00) 62%);
+  filter: blur(1px);
+  opacity: 0;
+  animation: puff 3.2s linear infinite;
+}
+
+.puff.p1 {
+  top: 20%;
+  animation-delay: 0.0s;
+}
+.puff.p2 {
+  top: 45%;
+  animation-delay: 1.1s;
+  width: 170px;
+  height: 170px;
+}
+.puff.p3 {
+  top: 68%;
+  animation-delay: 2.1s;
+  width: 120px;
+  height: 120px;
+}
+
+@keyframes puff {
+  0% {
+    transform: translateX(0) translateY(0) scale(0.85);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.55;
+  }
+  65% {
+    opacity: 0.20;
+  }
+  100% {
+    transform: translateX(300px) translateY(-40px) scale(1.25);
+    opacity: 0;
+  }
+}
+
+/* --- “Smoke trail” near the clock that reacts to progress --- */
+.clockSmokeTrail {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+body.running .clockSmokeTrail {
+  opacity: calc(0.35 + 0.55 * var(--smokeStrength));
+}
+
+.clockSmokeTrail::before,
+.clockSmokeTrail::after {
+  content: "";
+  position: absolute;
+  top: 52%;
+  left: 5%;
+  width: 44%;
+  height: 34%;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 20% 60%, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.00) 60%),
+    radial-gradient(circle at 55% 45%, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.00) 60%),
+    radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.00) 65%);
+  filter: blur(calc(6px + 8px * var(--smokeStrength)));
+  transform: translateX(calc(-12px - 10px * var(--smokeStrength))) rotate(-8deg)
+    scale(calc(0.90 + 0.20 * var(--smokeStrength)));
+  opacity: calc(0.18 + 0.65 * var(--smokeStrength));
+  animation: trailDrift 1.35s ease-in-out infinite;
+}
+
+.clockSmokeTrail::after {
+  top: 56%;
+  left: 8%;
+  width: 54%;
+  height: 40%;
+  opacity: calc(0.10 + 0.45 * var(--smokeStrength));
+  animation-duration: 1.75s;
+  animation-delay: 0.15s;
+}
+
+@keyframes trailDrift {
+  0% {
+    transform: translateX(calc(-10px - 10px * var(--smokeStrength))) translateY(0)
+      rotate(-8deg) scale(calc(0.92 + 0.18 * var(--smokeStrength)));
+  }
+  50% {
+    transform: translateX(calc(-2px - 6px * var(--smokeStrength))) translateY(-6px)
+      rotate(-5deg) scale(calc(1.00 + 0.22 * var(--smokeStrength)));
+  }
+  100% {
+    transform: translateX(calc(-10px - 10px * var(--smokeStrength))) translateY(0)
+      rotate(-8deg) scale(calc(0.92 + 0.18 * var(--smokeStrength)));
+  }
+}
+
+/* Reduce motion if user asks */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  body.running .clockFrame,
+  .puff,
+  .clockSmokeTrail::before,
+  .clockSmokeTrail::after {
+    animation: none !important;
+  }
+}

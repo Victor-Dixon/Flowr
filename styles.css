@@ -47,6 +47,11 @@ body {
 
 .header {
   padding: 8px 4px 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .brand {
@@ -75,6 +80,36 @@ body {
 .subtitle {
   font-size: 13px;
   color: var(--muted);
+}
+
+.headerNav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.headerLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.86);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 650;
+  transition: transform 80ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.headerLink:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.headerLink:active {
+  transform: translateY(1px);
 }
 
 .card {
