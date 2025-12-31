@@ -1,0 +1,52 @@
+name: flowr-mockup-smoke
+
+on:
+  pull_request:
+    paths:
+      - "flowr-mockup/**"
+      - ".github/workflows/flowr-mockup-smoke.yml"
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify mockup files exist
+        run: |
+          test -f flowr-mockup/index.html
+          test -f flowr-mockup/styles.css
+          test -f flowr-mockup/app.js
+      - name: Node syntax check (no deps)
+        run: |
+          node --version
+          node --check flowr-mockup/app.js
+      - name: Verify referenced local assets exist
+        run: |
+          # fail if index.html references local src/href files that don't exist
+          python - <<'PY'
+          import re, pathlib, sys
+          root = pathlib.Path("flowr-mockup")
+          html = (root / "index.html").read_text(encoding="utf-8")
+          # collect src/href that look like local files (no http(s), no #, no data:)
+          refs = set(re.findall(r'''(?:src|href)=["']([^"']+)["']''', html))
+          bad = []
+          for r in refs:
+            r = r.strip()
+            if not r or r.startswith(("#", "http://", "https://", "data:", "mailto:")):
+              continue
+            p = (root / r).resolve()
+            # keep it inside flowr-mockup/
+            try:
+              p.relative_to(root.resolve())
+            except Exception:
+              bad.append((r, "escapes flowr-mockup/"))
+              continue
+            if not p.exists():
+              bad.append((r, "missing"))
+          if bad:
+            print("Missing/bad refs:")
+            for r, why in bad:
+              print(f"- {r}: {why}")
+            sys.exit(1)
+          print("OK: refs validated")
+          PY
